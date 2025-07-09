@@ -1,6 +1,3 @@
-import Link from 'next/link';
-import Navigation from './components/Navigation';
-
 function Home() {
   return (
     <div className=''>
