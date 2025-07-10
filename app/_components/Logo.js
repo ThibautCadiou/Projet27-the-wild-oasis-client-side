@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import logo from '@/public/logo.png';
 
-/* eslint-disable @next/next/no-img-element */
 function Logo() {
   return (
     <Link href='/' className='flex items-center gap-4 z-10'>
-      <img src='/logo.png' height='100' width='100' alt='The Wild Oasis logo' />
+      <Image src='/logo.png' height='60' width='60' alt='The Wild Oasis logo' />
+      {/* <Image src={logo} alt='The Wild Oasis logo' quality={100} /> */}
       <span className='text-xl font-semibold text-primary-50 '>The Wild Oasis</span>
     </Link>
   );
