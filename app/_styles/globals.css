@@ -28,7 +28,6 @@
   --color-redish-500: #eef56f;
 }
 
-/*
 @layer components {
   .spinner {
     margin: 3.2rem auto 1.6rem;
@@ -56,7 +55,6 @@
     }
   }
 }
-*/
 
 /* For data picker */
 .rdp {
