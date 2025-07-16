@@ -1,6 +1,6 @@
-function ReservationForm() {
+function ReservationForm({ cabin }) {
   // CHANGE
-  const maxCapacity = 23;
+  const { maxCapacity } = cabin;
 
   return (
     <div className='scale-[1.01]'>
@@ -40,9 +40,7 @@ function ReservationForm() {
         </div>
 
         <div className='space-y-2'>
-          <label htmlFor='observations'>
-            Anything we should know about your stay?
-          </label>
+          <label htmlFor='observations'>Anything we should know about your stay?</label>
           <textarea
             name='observations'
             id='observations'
