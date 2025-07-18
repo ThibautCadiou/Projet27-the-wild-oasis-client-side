@@ -87,7 +87,6 @@ export async function getBookedDatesByCabinId(cabinId) {
   today.setUTCHours(0, 0, 0, 0);
   today = today.toISOString();
 
-  console.log(cabinId);
   // Getting all bookings
   const { data, error } = await supabase
     .from('bookings')
