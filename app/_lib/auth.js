@@ -6,14 +6,14 @@ const authConfig = {
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOLE_SECRET,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],
   callbacks: {
     authorized({ auth, request }) {
       return !!auth?.user;
     },
-    async signIn(user, account, profile) {
+    async signIn({ user, account, profile }) {
       try {
         const existingGuest = await getGuest(user.email);
 
@@ -31,7 +31,7 @@ const authConfig = {
     },
     async session({ session, user }) {
       const guest = await getGuest(session.user.email);
-      session.user.guestId = guestId;
+      session.user.guestId = guest?.id;
       return session;
     },
   },
