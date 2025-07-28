@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { auth, signIn, signOut } from './auth';
 import { supabase } from './supabase';
 import { getBookings } from './data-service';
+import { redirect } from 'next/navigation';
 
 export async function signInAction() {
   await signIn('google', { redirectTo: '/account' });
@@ -31,7 +32,6 @@ export async function updateProfile(formData) {
     .eq('id', session.user.guestId);
 
   if (error) {
-    console.error(error);
     throw new Error('Guest could not be updated');
   }
 
@@ -43,7 +43,6 @@ export async function deleteReservation(bookingId) {
   if (!session) throw new Error('You must be logged in');
 
   const guestBookings = await getBookings(session.user.guestId);
-  console.log(guestBookings);
   const guestBookingsIds = guestBookings.map((booking) => booking.id);
 
   if (!guestBookingsIds.includes(bookingId))
@@ -56,4 +55,62 @@ export async function deleteReservation(bookingId) {
   }
 
   revalidatePath('/account/reservations');
+}
+
+export async function updateBooking(formData) {
+  const session = await auth();
+  if (!session) throw new Error('You must be logged in');
+
+  const guestBookings = await getBookings(session.user.guestId);
+  const guestBookingsIds = guestBookings.map((booking) => booking.id);
+  const bookingId = Number(formData.get('bookingId'));
+
+  if (!guestBookingsIds.includes(bookingId))
+    throw new Error('You are not allowed to update this booking');
+
+  const updatedData = {
+    numGuests: Number(formData.get('numGuests')),
+    observations: formData.get('observations').slice(0, 1000),
+  };
+
+  const { error } = await supabase
+    .from('bookings')
+    .update(updatedData)
+    .eq('id', bookingId)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error('Booking could not be updated');
+  }
+
+  revalidatePath('/account/reservations');
+  revalidatePath(`/account/reservations/${bookingId}`);
+  redirect('/account/reservations');
+}
+
+export async function createBooking(bookingData, formData) {
+  const session = await auth();
+  if (!session) throw new Error('You must be logged in');
+
+  const newBooking = {
+    ...bookingData,
+    guestId: session.user.guestId,
+    numGuests: Number(formData.get('numGuests')),
+    observations: formData.get('observations').slice(0, 1000),
+    extrasPrice: 0,
+    totalPrice: bookingData.cabinPrice,
+    hasBreakfast: false,
+    status: 'unconfirmed',
+  };
+
+  console.log(newBooking);
+  const { error } = await supabase.from('bookings').insert([newBooking]).select().single();
+
+  if (error) {
+    throw new Error('Booking could not be created');
+  }
+
+  revalidatePath(`cabins/${bookingData.cabinId}`);
+  redirect('/cabins/thankyou');
 }

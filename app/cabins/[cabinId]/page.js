@@ -12,7 +12,10 @@ import { Suspense } from 'react';
 // };
 
 export async function generateMetadata({ params }) {
-  const cabin = await getCabin(params.cabinId);
+  // const cabin = await getCabin(params.cabinId);
+  const cabinId = params?.cabinId;
+  const cabin = await getCabin(cabinId);
+
   const { id, name, maxCapacity, regularPrice, discount, image, description } = cabin;
   return { title: `Cabin ${name}` };
 }
@@ -26,7 +29,8 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }) {
-  const cabin = await getCabin(params.cabinId);
+  const cabinId = await params.cabinId;
+  const cabin = await getCabin(cabinId);
 
   const { id, name, maxCapacity, regularPrice, discount, image, description } = cabin;
 

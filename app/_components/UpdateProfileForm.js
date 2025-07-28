@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { updateGuest, updateProfile } from '../_lib/actions';
 import { useFormStatus } from 'react-dom';
+import SubmitButton from './SubmitButton';
 
 export default function UpdateProfileForm({ children, guest }) {
   const [count, setCount] = useState();
@@ -51,7 +52,7 @@ export default function UpdateProfileForm({ children, guest }) {
       </div>
 
       <div className='flex justify-end items-center gap-6'>
-        <Button />
+        <SubmitButton pendingLabel='Updating things'>Update Profile</SubmitButton>
       </div>
     </form>
   );
