@@ -104,7 +104,6 @@ export async function createBooking(bookingData, formData) {
     status: 'unconfirmed',
   };
 
-  console.log(newBooking);
   const { error } = await supabase.from('bookings').insert([newBooking]).select().single();
 
   if (error) {
